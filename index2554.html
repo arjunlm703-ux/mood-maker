@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <title>Mood Maker</title>
   <style>
+
+
     body {
       font-family: 'Comic Sans MS', cursive;
       background-color: #fff0f0;
@@ -12,7 +14,6 @@
       padding: 40px;
       margin: 0;
       overflow-x: hidden;
-      
     }
 
     h1 {
@@ -44,7 +45,6 @@
       box-shadow: 0 0 10px rgba(255, 0, 0, 0.2);
     }
 
-    /* Floating emoji animation */
     .floating-emoji {
       position: fixed;
       font-size: 2rem;
@@ -75,16 +75,20 @@
   <div id="output"></div>
   <div><img id="memeImage" src="" alt="" style="display:none;"></div>
 
+  <!-- Offline Sound Effects -->
+  <audio id="laughSound" src="evil-laugh.mp3" preload="auto"></audio>
+  <audio id="hahaSound" src="haha.mp3" preload="auto"></audio>
+
   <script>
     const insults = [
-      "You're not useless. You can always be used as a bad example.",
-      "You have something on your chin... no, the third one down.",
-      "You're like a cloud. When you disappear, it's a beautiful day.",
-      "You're as sharp as a marble.",
-      "You're like a Monday morning with no coffee.",
-      "You're the reason shampoo bottles have instructions.",
-      "You're the Wi-Fi signal in a basement: weak and unreliable.",
-      "You're what happens when potential never shows up."
+      "You're not useless. You can always be used as a bad example ha ha ha .",
+      "You have something on your chin... no, the third one down ha haa haa.",
+      "You're like a cloud. When you disappear, it's a beautiful day haa haa haa.",
+      "You're as sharp as a marble haaa haaa haaa.",
+      "You're like a Monday morning with no coffee ha haa.",
+      "You're the reason shampoo bottles have instructions ha haa haa.",
+      "You're the Wi-Fi signal in a basement: weak and unreliable haha haha.",
+      "You're what happens when potential never shows up ha ha ha."
     ];
 
     const memes = [
@@ -123,13 +127,30 @@
       const insult = insults[Math.floor(Math.random() * insults.length)];
       const meme = memes[Math.floor(Math.random() * memes.length)];
       document.getElementById("output").innerHTML = "💥 Here's your cheer-up: " + insult;
+
       speak(insult);
+
+      // Play ha ha laugh after 2.5 seconds
+      setTimeout(() => {
+        const haha = document.getElementById("hahaSound");
+        haha.volume = 1;
+        haha.currentTime = 0;
+        haha.play().catch(err => console.log("Ha ha play error:", err));
+      }, 2500);
+
+      // Play evil laugh after 4 seconds
+      setTimeout(() => {
+        const evil = document.getElementById("laughSound");
+        evil.volume = 1;
+        evil.currentTime = 0;
+        evil.play().catch(err => console.log("Evil laugh play error:", err));
+      }, 4000);
+
       const memeImg = document.getElementById("memeImage");
       memeImg.src = meme;
       memeImg.style.display = "block";
     }
 
-    // Emoji floating animation
     function spawnEmoji() {
       const emojis = ['😄', '😂', '😍', '🤣', '🥳', '😎', '😊', '😆', '🤩', '😁'];
       const emoji = document.createElement('div');
@@ -141,7 +162,6 @@
       setTimeout(() => emoji.remove(), 5000);
     }
 
-    // Start floating emojis every 500ms
     setInterval(spawnEmoji, 500);
   </script>
 
