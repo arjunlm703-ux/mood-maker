@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mood Maker</title>
+  <style>
+    body {
+      font-family: 'Comic Sans MS', cursive;
+      background-color: #fff0f0;
+      color: #990000;
+      text-align: center;
+      padding: 40px;
+    }
+
+    h1 {
+      font-size: 3em;
+      margin-bottom: 10px;
+    }
+
+    button {
+      padding: 15px 30px;
+      font-size: 20px;
+      background-color: #ffcccc;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      margin: 10px;
+    }
+
+    #output {
+      margin-top: 40px;
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    img {
+      max-width: 90%;
+      margin-top: 20px;
+      border: 5px solid #ffb3b3;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(255, 0, 0, 0.2);
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Mood Maker</h1>
+  <p>One click, infinite smiles.</p>
+
+  <button onclick="destroyMood()">😄 Cheer Me Up</button>
+  
+  <div id="output"></div>
+  <div><img id="memeImage" src="" alt="" style="display:none;"></div>
+
+  <script>
+    const insults = [
+      "You're not useless. You can always be used as a bad example.",
+      "Your secrets are always safe with me. I never even listen when you tell me them.",
+      "You have something on your chin... no, the third one down.",
+      "You're like a cloud. When you disappear, it's a beautiful day.",
+      "You bring everyone so much joy… when you leave the room.",
+      "You're not stupid; you just have bad luck thinking.",
+      "If I had a dollar for every smart thing you said, I’d be broke.",
+      "You have something on your face: embarrassment.",
+      "You're the reason the gene pool needs a lifeguard.",
+      "You're as sharp as a marble.",
+      "You're living proof that even evolution takes a break sometimes.",
+      "You're like a software update. Every time I see you, I think, 'Not now.'",
+      "Your face makes onions cry.",
+      "You have something on your shoulder. It's mediocrity.",
+      "You're the reason shampoo bottles have instructions.",
+      "You’re impossible to underestimate.",
+      "Your brain is on airplane mode.",
+      "You're the human version of a participation award.",
+      "You're about as useful as a screen door on a submarine.",
+      "If I wanted to hear from someone irrelevant, I'd unmute my toaster.",
+      "You look like your personality was made in Microsoft Paint.",
+      "You’re not even on the same page—you’re not in the same book.",
+      "You’re like if a headache became a person.",
+      "You're a walking reminder that miracles can be disappointing.",
+      "You have the charisma of expired milk.",
+      "You light up the room… by leaving it.",
+      "Your entire life is a plot hole.",
+      "You're the background character in your own story.",
+      "You're a black hole of potential.",
+      "You're the physical form of buffering.",
+      "You're the Wi-Fi signal in a basement: weak and unreliable.",
+      "You're like a Monday morning with no coffee.",
+      "You make beige look exciting.",
+      "You're what happens when potential never shows up.",
+      "You're the 'before' photo in every ad.",
+      "You're more lost than Internet Explorer in 2025.",
+      "You bring a white flag to every challenge.",
+      "You're allergic to success.",
+      "You're the cliff notes of disappointment.",
+      "You're the sum of missed opportunities.",
+      "You’re the plot twist no one asked for.",
+      "You peak at 'almost'.",
+      "You're an echo in an empty room.",
+      "You're the typo in life's essay.",
+      "You're a crash report in human form.",
+      "You're the update no one installs.",
+      "You're a motivational quote’s worst nightmare.",
+      "You're the loading spinner of progress.",
+      "You're a demo version of failure.",
+      "You're a password with no uppercase letters."
+    ];
+
+    const memes = [
+      "https://i.imgflip.com/2/4t0m5.jpg",
+      "https://i.imgflip.com/1bij.jpg",
+      "https://i.imgur.com/UWb3ypW.jpeg",
+      "https://i.imgflip.com/5j7dr9.jpg",
+      "https://i.imgflip.com/30b1gx.jpg",
+      "https://i.imgur.com/1g0h2fN.jpeg",
+      "https://i.imgur.com/w3duR07.png",
+      "https://i.imgur.com/o9lAsfH.jpeg",
+      "https://i.imgur.com/QkZ3fbt.jpg",
+      "https://i.imgur.com/xHk3scc.jpeg"
+    ];
+
+    let voices = [];
+
+    function loadVoices() {
+      voices = speechSynthesis.getVoices();
+      if (!voices.length) setTimeout(loadVoices, 100);
+    }
+
+    if (typeof speechSynthesis !== "undefined") {
+      speechSynthesis.onvoiceschanged = loadVoices;
+      loadVoices();
+    }
+
+    function speak(text) {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.pitch = 0.9;
+      utterance.rate = 1;
+      const englishVoice = voices.find(v => v.lang.includes("en") && v.name.includes("Google"))
+                           || voices.find(v => v.lang.includes("en")) || null;
+      if (englishVoice) {
+        utterance.voice = englishVoice;
+      }
+      speechSynthesis.speak(utterance);
+    }
+
+    function destroyMood() {
+      const insult = insults[Math.floor(Math.random() * insults.length)];
+      const meme = memes[Math.floor(Math.random() * memes.length)];
+      document.getElementById("output").innerHTML = "💥 Here's your cheer-up: " + insult;
+      speak(insult);
+      const memeImg = document.getElementById("memeImage");
+      memeImg.src = meme;
+      memeImg.style.display = "block";
+    }
+
+    function startListening() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        alert("Your browser doesn't support speech recognition.");
+        return;
+      }
+
+      const recognition = new SpeechRecognition();
+      recognition.lang = 'en-US';
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+
+      recognition.start();
+
+      recognition.onresult = function(event) {
+        const spokenText = event.results[0][0].transcript;
+        document.getElementById("output").innerHTML = `You said: <em>${spokenText}</em>`;
+        destroyMood();
+      };
+
+      recognition.onerror = function(event) {
+        document.getElementById("output").textContent = "Error: " + event.error;
+      };
+    }
+  </script>
+</body>
+</html>
