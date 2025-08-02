@@ -70,7 +70,7 @@ For Software:
 For Software:
 
 # Screenshots (Add at least 3)
-![Screenshot1](Add screenshot 1 here with proper name)
+![Screenshot1](https://raw.githubusercontent.com/arjunlm703-ux/mood-maker/refs/heads/main/home.png)
 
 # Diagrams
 ![User opens the app
