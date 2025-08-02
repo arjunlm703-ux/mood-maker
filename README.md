@@ -69,8 +69,12 @@ For Software:
 ### Project Documentation
 For Software:
 
-# Screenshots (Add at least 3)
+# Screenshots 1
 ![Screenshot1](https://raw.githubusercontent.com/arjunlm703-ux/mood-maker/refs/heads/main/home.png)
+# Screenshots 2
+![Screenshot2](https://github.com/arjunlm703-ux/mood-maker/blob/main/home%202.png)
+# Screenshots 3
+![Screenshot3](https://github.com/arjunlm703-ux/mood-maker/blob/main/home%203.png)
 
 # Diagrams
 ![User opens the app
