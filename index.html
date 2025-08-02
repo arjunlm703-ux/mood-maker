@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mood Maker</title>
+  <style>
+
+
+    body {
+      font-family: 'Comic Sans MS', cursive;
+      background-color: #fff0f0;
+      color: #990000;
+      text-align: center;
+      padding: 40px;
+      margin: 0;
+      overflow-x: hidden;
+    }
+
+    h1 {
+      font-size: 3em;
+      margin-bottom: 10px;
+    }
+
+    button {
+      padding: 15px 30px;
+      font-size: 20px;
+      background-color: #ffcccc;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      margin: 10px;
+    }
+
+    #output {
+      margin-top: 40px;
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    img {
+      max-width: 90%;
+      margin-top: 20px;
+      border: 5px solid #ffb3b3;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(255, 0, 0, 0.2);
+    }
+
+    .floating-emoji {
+      position: fixed;
+      font-size: 2rem;
+      z-index: 9999;
+      animation: floatEmoji 5s linear;
+      pointer-events: none;
+    }
+
+    @keyframes floatEmoji {
+      0% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-100vh) scale(0.5);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Mood Maker</h1>
+  <p>One click, infinite smiles.</p>
+
+  <button onclick="destroyMood()">😄 Cheer Me Up</button>
+
+  <div id="output"></div>
+  <div><img id="memeImage" src="" alt="" style="display:none;"></div>
+
+  <!-- Offline Sound Effects -->
+  <audio id="laughSound" src="evil-laugh.mp3" preload="auto"></audio>
+  <audio id="hahaSound" src="haha.mp3" preload="auto"></audio>
+
+  <script>
+    const insults = [
+      "You're not useless. You can always be used as a bad example ha ha ha .",
+      "You have something on your chin... no, the third one down ha haa haa.",
+      "You're like a cloud. When you disappear, it's a beautiful day haa haa haa.",
+      "You're as sharp as a marble haaa haaa haaa.",
+      "You're like a Monday morning with no coffee ha haa.",
+      "You're the reason shampoo bottles have instructions ha haa haa.",
+      "You're the Wi-Fi signal in a basement: weak and unreliable haha haha.",
+      "You're what happens when potential never shows up ha ha ha."
+    ];
+
+    const memes = [
+      "https://i.imgflip.com/2/4t0m5.jpg",
+      "https://i.imgflip.com/1bij.jpg",
+      "https://i.imgur.com/UWb3ypW.jpeg",
+      "https://i.imgflip.com/5j7dr9.jpg",
+      "https://i.imgflip.com/30b1gx.jpg"
+    ];
+
+    let voices = [];
+
+    function loadVoices() {
+      voices = speechSynthesis.getVoices();
+      if (!voices.length) setTimeout(loadVoices, 100);
+    }
+
+    if (typeof speechSynthesis !== "undefined") {
+      speechSynthesis.onvoiceschanged = loadVoices;
+      loadVoices();
+    }
+
+    function speak(text) {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.pitch = 0.9;
+      utterance.rate = 1;
+      const englishVoice = voices.find(v => v.lang.includes("en") && v.name.includes("Google"))
+                           || voices.find(v => v.lang.includes("en")) || null;
+      if (englishVoice) {
+        utterance.voice = englishVoice;
+      }
+      speechSynthesis.speak(utterance);
+    }
+
+    function destroyMood() {
+      const insult = insults[Math.floor(Math.random() * insults.length)];
+      const meme = memes[Math.floor(Math.random() * memes.length)];
+      document.getElementById("output").innerHTML = "💥 Here's your cheer-up: " + insult;
+
+      speak(insult);
+
+      // Play ha ha laugh after 2.5 seconds
+      setTimeout(() => {
+        const haha = document.getElementById("hahaSound");
+        haha.volume = 1;
+        haha.currentTime = 0;
+        haha.play().catch(err => console.log("Ha ha play error:", err));
+      }, 2500);
+
+      // Play evil laugh after 4 seconds
+      setTimeout(() => {
+        const evil = document.getElementById("laughSound");
+        evil.volume = 1;
+        evil.currentTime = 0;
+        evil.play().catch(err => console.log("Evil laugh play error:", err));
+      }, 4000);
+
+      const memeImg = document.getElementById("memeImage");
+      memeImg.src = meme;
+      memeImg.style.display = "block";
+    }
+
+    function spawnEmoji() {
+      const emojis = ['😄', '😂', '😍', '🤣', '🥳', '😎', '😊', '😆', '🤩', '😁'];
+      const emoji = document.createElement('div');
+      emoji.className = 'floating-emoji';
+      emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+      emoji.style.left = Math.random() * 100 + 'vw';
+      emoji.style.bottom = '0';
+      document.body.appendChild(emoji);
+      setTimeout(() => emoji.remove(), 5000);
+    }
+
+    setInterval(spawnEmoji, 500);
+  </script>
+
+</body>
+</html>
